@@ -9,6 +9,6 @@ namespace SwiftBuy.Services.Interfaces
         Task<UsuarioModel> GetUsuarioId(int id);
         Task<UsuarioModel> AddUsuario(UsuarioDTO usuario);
         Task<UsuarioModel> UpdateUsuario(UsuarioDTO usuario);
-        Task<bool> DeleteUsuario(int id);
+        Task<UsuarioModel> DeleteUsuario(int id);
     }
 }

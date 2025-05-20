@@ -13,30 +13,37 @@ namespace SwiftBuy.Services
         {
             _usuarioRepositorio = usuarioRepositorio;
         }
-
-        public Task<UsuarioModel> AddUsuario(UsuarioDTO usuario)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> DeleteUsuario(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<UsuarioModel> GetUsuarioId(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<UsuarioModel>> GetUsuarios()
+        public async Task<List<UsuarioModel>> GetUsuarios() => await _usuarioRepositorio.GetUsuarios();
+
+        public async Task<UsuarioModel> AddUsuario(UsuarioDTO usuario)
+        {
+            if(usuario == null) throw new Exception("Usuário não pode ser nulo");
+
+            if (await _usuarioRepositorio.ValidaUsuario(usuario)) throw new Exception("Já existe um usuario com esse CPF ou email");
+
+            UsuarioModel usuarioBd = new(usuario);
+            usuarioBd.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
+            await _usuarioRepositorio.AddUsuario(usuarioBd);
+            return usuarioBd;
+        }
+        public Task<UsuarioModel> UpdateUsuario(UsuarioDTO usuario)
         {
             throw new NotImplementedException();
         }
 
-        public Task<UsuarioModel> UpdateUsuario(UsuarioDTO usuario)
+        public async Task<UsuarioModel> DeleteUsuario(int id)
         {
-            throw new NotImplementedException();
+            UsuarioModel userBd = await _usuarioRepositorio.GetUsuarioId(id);
+
+            if (userBd == null) throw new Exception($"Não foi encontrado nenhum usuario com esse Id: {id}");
+
+            await _usuarioRepositorio.DeleteUsuario(id);
+            return userBd;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using SwiftBuy.DataBase;
+﻿using Microsoft.EntityFrameworkCore;
+using SwiftBuy.DataBase;
+using SwiftBuy.DTO;
 using SwiftBuy.Model;
 using SwiftBuy.Repositorio.Interfaces;
 
@@ -12,29 +14,33 @@ namespace SwiftBuy.Repositorio
             _context = context;
         }
 
-        public Task<UsuarioModel> AddUsuario(UsuarioModel produto)
+        public async Task<List<UsuarioModel>> GetUsuarios() => await _context.usuarios.OrderBy(usuario => usuario.Nome).ToListAsync();
+
+        public async Task<UsuarioModel> GetUsuarioId(int id) => await _context.usuarios.FindAsync(id);
+
+        public async Task<UsuarioModel> AddUsuario(UsuarioModel usuario)
+        {
+            _context.Add(usuario);
+            await _context.SaveChangesAsync();
+            return usuario;
+        }
+        public Task<UsuarioModel> UpdateUsuario(UsuarioModel usuario)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteUsuario(int id)
+        public async Task<UsuarioModel> DeleteUsuario(int id)
         {
-            throw new NotImplementedException();
+            UsuarioModel usuario = await GetUsuarioId(id);
+            _context.Remove(usuario);
+            await _context.SaveChangesAsync();
+            return usuario;
         }
 
-        public Task<UsuarioModel> GetUsuarioId(int id)
+        public async Task<bool> ValidaUsuario(UsuarioDTO usuario)
         {
-            throw new NotImplementedException();
-        }
+            return await _context.usuarios.AnyAsync(userBd => userBd.Email == usuario.Email || userBd.CPF == usuario.CPF);
 
-        public Task<List<UsuarioModel>> GetUsuarios()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<UsuarioModel> UpdateUsuario(UsuarioModel produto)
-        {
-            throw new NotImplementedException();
         }
     }
 }

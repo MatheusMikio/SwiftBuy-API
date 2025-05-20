@@ -1,4 +1,5 @@
-﻿using SwiftBuy.Model;
+﻿using SwiftBuy.DTO;
+using SwiftBuy.Model;
 
 namespace SwiftBuy.Repositorio.Interfaces
 {
@@ -8,6 +9,7 @@ namespace SwiftBuy.Repositorio.Interfaces
         Task<UsuarioModel> GetUsuarioId(int id);
         Task<UsuarioModel> AddUsuario(UsuarioModel produto);
         Task<UsuarioModel> UpdateUsuario(UsuarioModel produto);
-        Task<bool> DeleteUsuario(int id);
+        Task<UsuarioModel> DeleteUsuario(int id);
+        public Task<bool> ValidaUsuario(UsuarioDTO usuario);
     }
 }
