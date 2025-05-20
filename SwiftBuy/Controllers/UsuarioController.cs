@@ -20,6 +20,16 @@ namespace SwiftBuy.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllUser() => Ok(await _usuarioService.GetUsuarios());
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUserId(int id)
+        {
+            UsuarioDTOSaida user = await _usuarioService.GetUsuarioId(id);
+
+            if(user == null) return NotFound("Usuário não encontrado!");
+
+            return Ok(user);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] UsuarioDTO usuarioDTO)
         {

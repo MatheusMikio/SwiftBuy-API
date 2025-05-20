@@ -13,12 +13,42 @@ namespace SwiftBuy.Services
         {
             _usuarioRepositorio = usuarioRepositorio;
         }
-        public Task<UsuarioModel> GetUsuarioId(int id)
-        {
-            throw new NotImplementedException();
-        }
 
-        public async Task<List<UsuarioModel>> GetUsuarios() => await _usuarioRepositorio.GetUsuarios();
+        public async Task<List<UsuarioDTOSaida>> GetUsuarios()
+        {
+            List<UsuarioModel> usersBd = await _usuarioRepositorio.GetUsuarios();
+            List<UsuarioDTOSaida> usersDTO = new();
+            foreach (UsuarioModel userBd in usersBd)
+            {
+                UsuarioDTOSaida usuarioDTO = new()
+                {
+                    Nome = userBd.Nome,
+                    Email = userBd.Email,
+                    CPF = userBd.CPF,
+                    Telefone = userBd.Telefone,
+                    Tipo = userBd.Tipo
+                };
+                usersDTO.Add(usuarioDTO);
+            }
+            return usersDTO;
+        } 
+
+        public async Task<UsuarioDTOSaida> GetUsuarioId(int id)
+        {
+            UsuarioModel userBd = await _usuarioRepositorio.GetUsuarioId(id);
+
+            if (userBd == null) return null;
+
+            UsuarioDTOSaida userDTO = new()
+            {
+                Nome = userBd.Nome,
+                Email = userBd.Email,
+                CPF = userBd.CPF,
+                Telefone = userBd.Telefone,
+                Tipo = userBd.Tipo
+            };
+            return userDTO;
+        }
 
         public async Task<UsuarioModel> AddUsuario(UsuarioDTO usuario)
         {
