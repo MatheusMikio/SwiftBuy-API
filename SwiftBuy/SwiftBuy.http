@@ -1,0 +1,6 @@
+@SwiftBuy_HostAddress = http://localhost:5023
+
+GET {{SwiftBuy_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
