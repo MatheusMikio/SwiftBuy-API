@@ -22,9 +22,7 @@ namespace SwiftBuy.Services
 
         public async Task<UsuarioModel> AddUsuario(UsuarioDTO usuario)
         {
-            if(usuario == null) throw new Exception("Usuário não pode ser nulo");
-
-            if (await _usuarioRepositorio.ValidaUsuario(usuario)) throw new Exception("Já existe um usuario com esse CPF ou email");
+            if (await _usuarioRepositorio.ValidaUsuario(usuario)) return null;
 
             UsuarioModel usuarioBd = new(usuario);
             usuarioBd.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
@@ -40,7 +38,7 @@ namespace SwiftBuy.Services
         {
             UsuarioModel userBd = await _usuarioRepositorio.GetUsuarioId(id);
 
-            if (userBd == null) throw new Exception($"Não foi encontrado nenhum usuario com esse Id: {id}");
+            if (userBd == null) return null;
 
             await _usuarioRepositorio.DeleteUsuario(id);
             return userBd;

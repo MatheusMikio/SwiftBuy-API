@@ -23,7 +23,12 @@ namespace SwiftBuy.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] UsuarioDTO usuarioDTO)
         {
+            if (usuarioDTO == null) return BadRequest("É necessário informar um usuário!");
+
             UsuarioModel usuario = await _usuarioService.AddUsuario(usuarioDTO);
+
+            if (usuario == null) return BadRequest("Já existe um usuário com esse CPF ou e-mail!");
+
             return CreatedAtAction(nameof(CreateUser), usuario);
         }
     }

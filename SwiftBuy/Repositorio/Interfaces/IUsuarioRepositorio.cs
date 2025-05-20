@@ -10,6 +10,6 @@ namespace SwiftBuy.Repositorio.Interfaces
         Task<UsuarioModel> AddUsuario(UsuarioModel produto);
         Task<UsuarioModel> UpdateUsuario(UsuarioModel produto);
         Task<UsuarioModel> DeleteUsuario(int id);
-        public Task<bool> ValidaUsuario(UsuarioDTO usuario);
+        Task<bool> ValidaUsuario(UsuarioDTO usuario);
     }
 }
