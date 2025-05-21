@@ -50,6 +50,20 @@ namespace SwiftBuy.Services
 
             return userDTO;
         }
+        public async Task<UsuarioDTOSaida> GetUsuarioCpf(UsuarioDTO usuario)
+        {
+            UsuarioModel userBd = await _usuarioRepositorio.GetUsuarioCpf(usuario.CPF);
+            if (userBd == null) return null;
+            UsuarioDTOSaida userDTO = new()
+            {
+                Nome = userBd.Nome,
+                Email = userBd.Email,
+                CPF = userBd.CPF,
+                Telefone = userBd.Telefone,
+                Tipo = userBd.Tipo
+            };
+            return userDTO;
+        }
 
         public async Task<UsuarioModel> AddUsuario(UsuarioDTO usuario)
         {
@@ -78,7 +92,22 @@ namespace SwiftBuy.Services
             return updatedUser;
         }
 
+        public async Task<UsuarioModel> UpdateUsuario(UsuarioDTO usuario)
+        {
+            bool userDuplicado = await _usuarioRepositorio.ValidaUsuarioCpf(usuario);
 
+            if (userDuplicado) return null;
+
+            UsuarioModel updatedUser = await _usuarioRepositorio.GetUsuarioCpf(usuario.CPF);
+            updatedUser.Nome = usuario.Nome;
+            updatedUser.Telefone = usuario.Telefone;
+            updatedUser.Email = usuario.Email;
+            updatedUser.CPF = usuario.CPF;
+            updatedUser.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
+            updatedUser.Tipo = usuario.Tipo;
+            await _usuarioRepositorio.UpdateUsuario(updatedUser);
+            return updatedUser;
+        }
         public async Task<UsuarioModel> DeleteUsuario(int id)
         {
             UsuarioModel userBd = await _usuarioRepositorio.GetUsuarioId(id);
@@ -88,5 +117,7 @@ namespace SwiftBuy.Services
             await _usuarioRepositorio.DeleteUsuario(id);
             return userBd;
         }
+
+
     }
 }

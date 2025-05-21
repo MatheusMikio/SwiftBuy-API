@@ -46,17 +46,24 @@ namespace SwiftBuy.Repositorio
             return await _context.usuarios.AnyAsync(userBd => userBd.Email == usuario.Email || userBd.CPF == usuario.CPF);
 
         }
+        public async Task<bool> ValidaUsuarioCpf(UsuarioDTO usuario)
+        {
+            UsuarioModel usuarioBd = await GetUsuarioCpf(usuario.CPF);
+
+            bool userDuplicado = await _context.usuarios.AnyAsync(user =>(user.CPF == usuario.CPF || user.Email == usuario.Email) && user.Id != usuarioBd.Id);
+
+            return userDuplicado;
+        }
+
         public async Task<bool> ValidaUsuarioUpdate(UsuarioDTO usuario, int id)
         {
             UsuarioModel usuarioBd = await GetUsuarioId(id);
 
             if (usuarioBd == null) return false;
 
-            bool userDuplicado = await _context.usuarios.AnyAsync(user => user.Email == usuario.Email && user.Id != usuarioBd.Id);
+            bool userDuplicado = await _context.usuarios.AnyAsync(user =>(user.CPF == usuario.CPF || user.Email == usuario.Email) && user.Id != usuarioBd.Id);
 
-            if (userDuplicado) return true;
-
-            return false;
+            return userDuplicado;
         }
     }
 }
