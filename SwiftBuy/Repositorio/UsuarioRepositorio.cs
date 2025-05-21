@@ -17,6 +17,7 @@ namespace SwiftBuy.Repositorio
         public async Task<List<UsuarioModel>> GetUsuarios() => await _context.usuarios.OrderBy(usuario => usuario.Nome).ToListAsync();
 
         public async Task<UsuarioModel> GetUsuarioId(int id) => await _context.usuarios.FindAsync(id);
+        public async Task<UsuarioModel> GetUsuarioCpf(string cpf) => await _context.usuarios.FirstOrDefaultAsync(usuario => usuario.CPF == cpf);
 
         public async Task<UsuarioModel> AddUsuario(UsuarioModel usuario)
         {
@@ -24,9 +25,12 @@ namespace SwiftBuy.Repositorio
             await _context.SaveChangesAsync();
             return usuario;
         }
-        public Task<UsuarioModel> UpdateUsuario(UsuarioModel usuario)
+
+        public async Task<UsuarioModel> UpdateUsuario(UsuarioModel usuario)
         {
-            throw new NotImplementedException();
+            _context.Update(usuario);
+            await _context.SaveChangesAsync();
+            return usuario;
         }
 
         public async Task<UsuarioModel> DeleteUsuario(int id)
@@ -41,6 +45,18 @@ namespace SwiftBuy.Repositorio
         {
             return await _context.usuarios.AnyAsync(userBd => userBd.Email == usuario.Email || userBd.CPF == usuario.CPF);
 
+        }
+        public async Task<bool> ValidaUsuarioUpdate(UsuarioDTO usuario, int id)
+        {
+            UsuarioModel usuarioBd = await GetUsuarioId(id);
+
+            if (usuarioBd == null) return false;
+
+            bool userDuplicado = await _context.usuarios.AnyAsync(user => user.Email == usuario.Email && user.Id != usuarioBd.Id);
+
+            if (userDuplicado) return true;
+
+            return false;
         }
     }
 }

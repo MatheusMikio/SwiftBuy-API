@@ -41,5 +41,21 @@ namespace SwiftBuy.Controllers
 
             return CreatedAtAction(nameof(CreateUser), usuario);
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UsuarioDTO usuarioDTO)
+        {
+            if (usuarioDTO == null) return BadRequest("É necessário informar um usuário!");
+
+            UsuarioDTOSaida usuarioId = await _usuarioService.GetUsuarioId(id);
+
+            if (usuarioId == null) return NotFound("Usuário não encontrado!");
+
+            UsuarioModel usuario = await _usuarioService.UpdateUsuario(usuarioDTO, id);
+
+            if (usuario == null) return BadRequest("Já existe um usuário com esse CPF ou e-mail!");
+
+            return NoContent();
+        }
     }
 }

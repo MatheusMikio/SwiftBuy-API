@@ -47,6 +47,7 @@ namespace SwiftBuy.Services
                 Telefone = userBd.Telefone,
                 Tipo = userBd.Tipo
             };
+
             return userDTO;
         }
 
@@ -59,10 +60,24 @@ namespace SwiftBuy.Services
             await _usuarioRepositorio.AddUsuario(usuarioBd);
             return usuarioBd;
         }
-        public Task<UsuarioModel> UpdateUsuario(UsuarioDTO usuario)
+
+        public async Task<UsuarioModel> UpdateUsuario(UsuarioDTO usuario, int id)
         {
-            throw new NotImplementedException();
+            bool userDuplicado = await _usuarioRepositorio.ValidaUsuarioUpdate(usuario, id);
+
+            if (userDuplicado) return null;
+
+            UsuarioModel updatedUser = await _usuarioRepositorio.GetUsuarioId(id);
+            updatedUser.Nome = usuario.Nome;
+            updatedUser.Telefone = usuario.Telefone;
+            updatedUser.Email = usuario.Email;
+            updatedUser.CPF = usuario.CPF;
+            updatedUser.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
+            updatedUser.Tipo = usuario.Tipo;
+            await _usuarioRepositorio.UpdateUsuario(updatedUser);
+            return updatedUser;
         }
+
 
         public async Task<UsuarioModel> DeleteUsuario(int id)
         {
