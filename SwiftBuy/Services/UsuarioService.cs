@@ -108,13 +108,13 @@ namespace SwiftBuy.Services
             await _usuarioRepositorio.UpdateUsuario(updatedUser);
             return updatedUser;
         }
-        public async Task<UsuarioModel> DeleteUsuario(int id)
+        public async Task<UsuarioModel> DeleteUsuario(string cpf)
         {
-            UsuarioModel userBd = await _usuarioRepositorio.GetUsuarioId(id);
+            UsuarioModel userBd = await _usuarioRepositorio.GetUsuarioCpf(cpf);
 
             if (userBd == null) return null;
 
-            await _usuarioRepositorio.DeleteUsuario(id);
+            await _usuarioRepositorio.DeleteUsuario(userBd);
             return userBd;
         }
 

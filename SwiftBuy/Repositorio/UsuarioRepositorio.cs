@@ -33,9 +33,8 @@ namespace SwiftBuy.Repositorio
             return usuario;
         }
 
-        public async Task<UsuarioModel> DeleteUsuario(int id)
+        public async Task<UsuarioModel> DeleteUsuario(UsuarioModel usuario)
         {
-            UsuarioModel usuario = await GetUsuarioId(id);
             _context.Remove(usuario);
             await _context.SaveChangesAsync();
             return usuario;

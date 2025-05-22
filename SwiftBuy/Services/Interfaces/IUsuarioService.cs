@@ -10,7 +10,7 @@ namespace SwiftBuy.Services.Interfaces
         Task<UsuarioModel> AddUsuario(UsuarioDTO usuario);
         Task<UsuarioModel> UpdateUsuario(UsuarioDTO usuario, int id);
         Task<UsuarioModel> UpdateUsuario(UsuarioDTO usuario);
-        Task<UsuarioModel> DeleteUsuario(int id);
+        Task<UsuarioModel> DeleteUsuario(string cpf);
         Task<UsuarioDTOSaida> GetUsuarioCpf(UsuarioDTO usuario);
     }
 }

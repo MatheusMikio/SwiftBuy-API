@@ -72,5 +72,16 @@ namespace SwiftBuy.Controllers
 
             return NoContent();
         }
+        [HttpDelete("{cpf}")]
+        public async Task<IActionResult> DeleteUser(string cpf)
+        {
+            if (string.IsNullOrEmpty(cpf)) return BadRequest("É necessário informar um CPF!");
+
+            UsuarioModel usuario = await _usuarioService.DeleteUsuario(cpf);
+
+            if (usuario == null) return NotFound("Usuário não encontrado!");
+
+            return Ok(usuario);
+        }
     }
 }
