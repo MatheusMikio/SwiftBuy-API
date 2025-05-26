@@ -7,8 +7,9 @@ namespace SwiftBuy.Repositorio.Interfaces
     {
         Task<List<ProdutoModel>> GetProdutos();
         Task<ProdutoModel> GetProdutoId(int id);
+        Task<ProdutoModel> GetProdutoNome(string nome);
         Task<ProdutoModel> AddProduto(ProdutoModel produto);
         Task<ProdutoModel> UpdateProduto(ProdutoModel produto);
-        Task<bool> DeleteProduto(int id);
+        Task<ProdutoModel> DeleteProduto(ProdutoModel produto);
     }
 }

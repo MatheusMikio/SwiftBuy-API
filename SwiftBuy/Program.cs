@@ -4,6 +4,7 @@ using SwiftBuy.Repositorio;
 using SwiftBuy.Repositorio.Interfaces;
 using SwiftBuy.Services;
 using SwiftBuy.Services.Interfaces;
+using System.Text.Json.Serialization;
 
 namespace SwiftBuy
 {
@@ -29,9 +30,13 @@ namespace SwiftBuy
             builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
             builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            });
+
             //Integração api
             builder.Services.AddHttpClient();
-
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

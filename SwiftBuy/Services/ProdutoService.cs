@@ -8,25 +8,80 @@ namespace SwiftBuy.Services
     public class ProdutoService : IProdutoService
     {
         private readonly IProdutoRepositorio _produtoRepositorio;
-        private readonly HttpClient _httpClient;
 
         public ProdutoService(IProdutoRepositorio produtoRepositorio, HttpClient httpClient)
         {
             _produtoRepositorio = produtoRepositorio;
-            _httpClient = httpClient;
         }
-        public Task<List<ProdutoModel>> GetProdutos()
+        public async Task<List<ProdutoDTOSaida>> GetProdutos()
         {
-            throw new NotImplementedException();
+            List<ProdutoModel> produtosDb = await _produtoRepositorio.GetProdutos();
+            List<ProdutoDTOSaida> produtos = new();
+            foreach(ProdutoModel produto in produtosDb)
+            {
+                ProdutoDTOSaida prod = new()
+                {
+                    Id = produto.Id,
+                    Nome = produto.Nome,
+                    Descricao = produto.Descricao,
+                    Categoria = produto.Categoria,
+                    Preco = produto.Preco,
+                    ImagemProduto = produto.ImagemProduto
+                };
+                produtos.Add(prod);
+            }
+            return produtos;
         }
+
         public Task<ProdutoModel> GetProdutoId(int id)
         {
             throw new NotImplementedException();
         }
-
-        public Task<ProdutoModel> AddProduto(ProdutoDTO produto)
+        public async Task<ProdutoDTOSaida> GetProdutoNome(string nome)
         {
-            throw new NotImplementedException();
+            ProdutoModel produto = await _produtoRepositorio.GetProdutoNome(nome);
+            
+            if (produto == null) return null;
+
+            ProdutoDTOSaida response = new()
+            {
+                Id = produto.Id,
+                Nome = produto.Nome,
+                Descricao = produto.Descricao,
+                Preco = produto.Preco,
+                Categoria = produto.Categoria,
+                ImagemProduto = produto.ImagemProduto
+            };
+            return response;
+        }
+
+        public async Task<ProdutoDTO> AddProduto(ProdutoDTO produto)
+        {
+            ProdutoModel produtoDB = await _produtoRepositorio.GetProdutoNome(produto.Nome);
+
+            if (produtoDB != null) return null;
+
+            List<ImagemModel> imgs = new();
+            foreach (var img in produto.ImagemProduto)
+            {
+                ImagemModel imagem = new()
+                {
+                    UrlImagem = img.UrlImagem
+                };
+                imgs.Add(imagem);
+            }
+
+            ProdutoModel produtoNovo = new()
+            {
+                Nome = produto.Nome,
+                Descricao = produto.Descricao,
+                Categoria = produto.Categoria,
+                Preco = produto.Preco,
+                ImagemProduto = imgs
+            };
+
+            await _produtoRepositorio.AddProduto(produtoNovo);
+            return produto;
         }
         public Task<ProdutoModel> UpdateProduto(ProdutoDTO produto)
         {

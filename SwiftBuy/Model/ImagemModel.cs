@@ -6,11 +6,9 @@ namespace SwiftBuy.Model
     {
         [Key]
         public int Id { get; set; }
-        public string ? UrlImagem { get; set; }
-        public string ? ImagemThumb { get; set; }
         [Required]
+        public string UrlImagem { get; set; }
         public int ProdutoId { get; set; }
-        public bool Principal { get; set; }
         public ProdutoModel Produto { get; set; }
 
         public ImagemModel() { }

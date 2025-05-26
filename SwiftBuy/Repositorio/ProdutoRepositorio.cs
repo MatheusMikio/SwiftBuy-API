@@ -1,6 +1,8 @@
-﻿using SwiftBuy.DataBase;
+﻿using Microsoft.EntityFrameworkCore;
+using SwiftBuy.DataBase;
 using SwiftBuy.Model;
 using SwiftBuy.Repositorio.Interfaces;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SwiftBuy.Repositorio
 {
@@ -12,28 +14,39 @@ namespace SwiftBuy.Repositorio
             _context = context;
         }
 
+        public async Task<List<ProdutoModel>> GetProdutos() => await _context.produtos.Include(p => p.ImagemProduto).ToListAsync();
+
         public Task<ProdutoModel> GetProdutoId(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<ProdutoModel>> GetProdutos()
+        public async Task<ProdutoModel> GetProdutoNome(string nome)
         {
-            throw new NotImplementedException();
+            ProdutoModel produto = await _context.produtos.Include(p => p.ImagemProduto).FirstOrDefaultAsync(p => p.Nome == nome);
+            return produto;
         }
 
-        public Task<ProdutoModel> AddProduto(ProdutoModel produto)
+        public async Task<ProdutoModel> AddProduto(ProdutoModel produto)
         {
-            throw new NotImplementedException();
+            _context.produtos.Add(produto);
+            await _context.SaveChangesAsync();
+            return produto;
         }
-        public Task<ProdutoModel> UpdateProduto(ProdutoModel produto)
+        public async Task<ProdutoModel> UpdateProduto(ProdutoModel produto)
         {
-            throw new NotImplementedException();
+            _context.produtos.Update(produto);
+            await _context.SaveChangesAsync();
+            return produto;
         }
 
-        public Task<bool> DeleteProduto(int id)
+        public async Task<ProdutoModel> DeleteProduto(ProdutoModel produto)
         {
-            throw new NotImplementedException();
+            _context.produtos.Remove(produto);
+            await _context.SaveChangesAsync();
+            return produto;
         }
+
+
     }
 }

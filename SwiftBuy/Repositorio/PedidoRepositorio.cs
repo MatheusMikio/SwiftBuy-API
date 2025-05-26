@@ -1,4 +1,6 @@
-﻿using SwiftBuy.DataBase;
+﻿//using SwiftBuy.DataBase;
+using Microsoft.EntityFrameworkCore;
+using SwiftBuy.DataBase;
 using SwiftBuy.Model;
 using SwiftBuy.Repositorio.Interfaces;
 
@@ -12,13 +14,7 @@ namespace SwiftBuy.Repositorio
         {
             _context = context;
         }
-
-        public Task<PedidoModel> AddPedido(PedidoModel pedido)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> DeletePedido(int id)
+        public Task<List<PedidoModel>> GetPedidos()
         {
             throw new NotImplementedException();
         }
@@ -28,14 +24,22 @@ namespace SwiftBuy.Repositorio
             throw new NotImplementedException();
         }
 
-        public Task<List<PedidoModel>> GetPedidos()
+        public Task<PedidoModel> AddPedido(PedidoModel pedido)
         {
             throw new NotImplementedException();
         }
-
         public Task<PedidoModel> UpdatePedido(PedidoModel pedido)
         {
             throw new NotImplementedException();
         }
+
+        public Task<bool> DeletePedido(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        
+
+
     }
 }

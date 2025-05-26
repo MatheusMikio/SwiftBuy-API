@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SwiftBuy.DataBase;
 
@@ -11,9 +12,11 @@ using SwiftBuy.DataBase;
 namespace SwiftBuy.Migrations
 {
     [DbContext(typeof(SwiftBuyDbContext))]
-    partial class SwiftBuyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250526225925_UpdateTableImage")]
+    partial class UpdateTableImage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
