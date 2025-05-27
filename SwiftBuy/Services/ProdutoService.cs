@@ -33,9 +33,19 @@ namespace SwiftBuy.Services
             return produtos;
         }
 
-        public Task<ProdutoModel> GetProdutoId(int id)
+        public async Task<ProdutoDTOSaida> GetProdutoId(int id)
         {
-            throw new NotImplementedException();
+            ProdutoModel produto = await _produtoRepositorio.GetProdutoId(id);
+            ProdutoDTOSaida produtoSaida = new()
+            {
+                Id = produto.Id,
+                Nome = produto.Nome,
+                Descricao = produto.Descricao,
+                Preco = produto.Preco,
+                Categoria = produto.Categoria,
+                ImagemProduto = produto.ImagemProduto
+            };
+            return produtoSaida;
         }
         public async Task<ProdutoDTOSaida> GetProdutoNome(string nome)
         {
@@ -83,9 +93,26 @@ namespace SwiftBuy.Services
             await _produtoRepositorio.AddProduto(produtoNovo);
             return produto;
         }
-        public Task<ProdutoModel> UpdateProduto(ProdutoDTO produto)
+        public async Task<ProdutoModel> UpdateProduto(ProdutoDTO produto, int id)
         {
-            throw new NotImplementedException();
+            bool produtoDuplicado = await _produtoRepositorio.ValidarProdutoUpdate(produto, id);
+            
+            if (produtoDuplicado) return null;
+
+            ProdutoModel produtoDb = await _produtoRepositorio.GetProdutoId(id);
+
+            List<ImagemModel> newImgs = new();
+            foreach (ImagemModel img in produtoDb.ImagemProduto)
+            {
+                newImgs.Add(img);
+            }
+            produtoDb.Nome = produto.Nome;
+            produtoDb.Descricao = produto.Descricao;
+            produtoDb.Categoria = produto.Categoria;
+            produtoDb.Preco = produto.Preco;
+            produtoDb.ImagemProduto = newImgs;
+            await _produtoRepositorio.UpdateProduto(produtoDb);
+            return produtoDb;
         }
 
         public Task<bool> DeleteProduto(int id)

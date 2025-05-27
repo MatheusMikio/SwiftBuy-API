@@ -41,6 +41,23 @@ namespace SwiftBuy.Controllers
             return CreatedAtAction(nameof(CriarProduto), produto);
         }
 
+        [HttpPut]
+        public async Task<IActionResult> AtualizarProduto([FromBody] ProdutoDTO produto, int id)
+        {
+            if (produto == null) return BadRequest("Informe o produto!");
+
+            ProdutoDTOSaida produtoNome = await _produtoService.GetProdutoId(id);
+
+            if (produtoNome == null) return NotFound("Não existe produto com esse nome!");
+
+            ProdutoModel produtoDb = await _produtoService.UpdateProduto(produto, id);
+
+            if (produtoDb == null) return BadRequest("Já existe um produto com esse nome!");
+
+            return NoContent();
+            
+        }
+
 
     }
 }

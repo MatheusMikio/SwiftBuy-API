@@ -11,5 +11,7 @@ namespace SwiftBuy.Repositorio.Interfaces
         Task<ProdutoModel> AddProduto(ProdutoModel produto);
         Task<ProdutoModel> UpdateProduto(ProdutoModel produto);
         Task<ProdutoModel> DeleteProduto(ProdutoModel produto);
+
+        Task<bool> ValidarProdutoUpdate(ProdutoDTO nome, int id);
     }
 }
