@@ -55,9 +55,16 @@ namespace SwiftBuy.Controllers
             if (produtoDb == null) return BadRequest("Já existe um produto com esse nome!");
 
             return NoContent();
-            
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletarProduto(int id)
+        {
+            ProdutoModel produto = await _produtoService.DeleteProduto(id);
 
+            if (produto == null) return NotFound("Produto não encontrado!");
+
+            return Ok(produto);
+        }
     }
 }

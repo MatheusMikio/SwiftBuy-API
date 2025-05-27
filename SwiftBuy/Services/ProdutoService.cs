@@ -115,9 +115,14 @@ namespace SwiftBuy.Services
             return produtoDb;
         }
 
-        public Task<bool> DeleteProduto(int id)
+        public async Task<ProdutoModel> DeleteProduto(int id)
         {
-            throw new NotImplementedException();
+            ProdutoModel produtoDb = await _produtoRepositorio.GetProdutoId(id);
+
+            if (produtoDb == null) return null;
+
+            await _produtoRepositorio.DeleteProduto(produtoDb);
+            return produtoDb;
         }
     }
 }

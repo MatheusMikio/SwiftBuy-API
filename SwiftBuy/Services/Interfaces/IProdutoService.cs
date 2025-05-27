@@ -10,6 +10,6 @@ namespace SwiftBuy.Services.Interfaces
         Task<ProdutoDTOSaida> GetProdutoNome(string nome);
         Task<ProdutoDTO> AddProduto(ProdutoDTO produto);
         Task<ProdutoModel> UpdateProduto(ProdutoDTO produto, int id);
-        Task<bool> DeleteProduto(int id);
+        Task<ProdutoModel> DeleteProduto(int id);
     }
 }
