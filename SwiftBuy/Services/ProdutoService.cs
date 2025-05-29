@@ -1,4 +1,5 @@
-﻿using SwiftBuy.DTO;
+﻿using SwiftBuy.DTO.Imagem;
+using SwiftBuy.DTO.Produto;
 using SwiftBuy.Model;
 using SwiftBuy.Repositorio.Interfaces;
 using SwiftBuy.Services.Interfaces;
@@ -26,12 +27,89 @@ namespace SwiftBuy.Services
                     Descricao = produto.Descricao,
                     Categoria = produto.Categoria,
                     Preco = produto.Preco,
-                    ImagemProduto = produto.ImagemProduto
+                    ImagemProduto = produto.ImagemProduto?.Select(img => new ImagemDTOSaida
+                    { 
+                        UrlImagem = img.UrlImagem,
+                        ProdutoId = img.ProdutoId
+                    }).ToList()
                 };
                 produtos.Add(prod);
             }
             return produtos;
         }
+
+        public async Task<List<ProdutoDTOSaida>> GetProdutosPreco()
+        {
+            List<ProdutoModel> produtosDb = await _produtoRepositorio.GetProdutosPreco();
+            List<ProdutoDTOSaida> produtos = new();
+            foreach (ProdutoModel produto in produtosDb)
+            {
+                ProdutoDTOSaida prod = new()
+                {
+                    Id = produto.Id,
+                    Nome = produto.Nome,
+                    Descricao = produto.Descricao,
+                    Categoria = produto.Categoria,
+                    Preco = produto.Preco,
+                    ImagemProduto = produto.ImagemProduto?.Select(img => new ImagemDTOSaida
+                    {
+                        UrlImagem = img.UrlImagem,
+                        ProdutoId = img.ProdutoId
+                    }).ToList()
+                };
+                produtos.Add(prod);
+            }
+            return produtos;
+        }
+
+        public async Task<List<ProdutoDTOSaida>> GetProdutosMaisVendidos()
+        {
+            List<ProdutoModel> produtosDb = await _produtoRepositorio.GetProdutosMaisVendidos();
+            List<ProdutoDTOSaida> produtos = new();
+            foreach(ProdutoModel produto in produtosDb)
+            {
+                ProdutoDTOSaida prod = new()
+                {
+                    Id = produto.Id,
+                    Nome = produto.Nome,
+                    Descricao = produto.Descricao,
+                    Categoria = produto.Categoria,
+                    Preco = produto.Preco,
+                    ImagemProduto = produto.ImagemProduto?.Select(img => new ImagemDTOSaida
+                    {
+                        UrlImagem = img.UrlImagem,
+                        ProdutoId = img.ProdutoId
+                    }).ToList()
+                };
+                produtos.Add(prod);
+            }
+            return produtos;
+        }
+
+        public async Task<List<ProdutoDTOSaida>> GetProdutosPaginacao(int pagina, int tamanho)
+        {
+            List<ProdutoModel> produtos = await _produtoRepositorio.GetProdutosPaginacao(pagina, tamanho);
+            List<ProdutoDTOSaida> produtosSaida = new();
+            foreach(ProdutoModel produto in produtos)
+            {
+                ProdutoDTOSaida prod = new()
+                {
+                    Id = produto.Id,
+                    Nome = produto.Nome,
+                    Descricao = produto.Descricao,
+                    Categoria = produto.Categoria,
+                    Preco = produto.Preco,
+                    ImagemProduto = produto.ImagemProduto?.Select(img => new ImagemDTOSaida
+                    {
+                        UrlImagem = img.UrlImagem,
+                        ProdutoId = img.ProdutoId
+                    }).ToList()
+                };
+                produtosSaida.Add(prod);
+            }
+            return produtosSaida;
+        }
+
 
         public async Task<ProdutoDTOSaida> GetProdutoId(int id)
         {
@@ -43,7 +121,11 @@ namespace SwiftBuy.Services
                 Descricao = produto.Descricao,
                 Preco = produto.Preco,
                 Categoria = produto.Categoria,
-                ImagemProduto = produto.ImagemProduto
+                ImagemProduto = produto.ImagemProduto?.Select(img => new ImagemDTOSaida
+                {
+                    UrlImagem = img.UrlImagem,
+                    ProdutoId = img.ProdutoId
+                }).ToList()
             };
             return produtoSaida;
         }
@@ -60,7 +142,11 @@ namespace SwiftBuy.Services
                 Descricao = produto.Descricao,
                 Preco = produto.Preco,
                 Categoria = produto.Categoria,
-                ImagemProduto = produto.ImagemProduto
+                ImagemProduto = produto.ImagemProduto?.Select(img => new ImagemDTOSaida
+                {
+                    UrlImagem = img.UrlImagem,
+                    ProdutoId = img.ProdutoId
+                }).ToList()
             };
             return response;
         }
@@ -115,14 +201,31 @@ namespace SwiftBuy.Services
             return produtoDb;
         }
 
-        public async Task<ProdutoModel> DeleteProduto(int id)
+        public async Task<ProdutoDTOSaida> DeleteProduto(int id)
         {
             ProdutoModel produtoDb = await _produtoRepositorio.GetProdutoId(id);
 
             if (produtoDb == null) return null;
 
             await _produtoRepositorio.DeleteProduto(produtoDb);
-            return produtoDb;
+
+            ProdutoDTOSaida produto = new()
+            {
+                Id = produtoDb.Id,
+                Nome = produtoDb.Nome,
+                Descricao = produtoDb.Descricao,
+                Categoria = produtoDb.Categoria,
+                Preco = produtoDb.Preco,
+                ImagemProduto = produtoDb.ImagemProduto?.Select(img => new ImagemDTOSaida
+                {
+                    UrlImagem = img.UrlImagem,
+                    ProdutoId = img.ProdutoId
+                }
+                ).ToList()
+            };
+            return produto;
         }
+
+
     }
 }

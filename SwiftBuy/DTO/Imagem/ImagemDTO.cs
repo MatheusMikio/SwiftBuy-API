@@ -1,6 +1,6 @@
-﻿namespace SwiftBuy.DTO
+﻿namespace SwiftBuy.DTO.Imagem
 {
-    public class ImagemModelDTO
+    public class ImagemDTO
     {
         public string UrlImagem { get; set; }
     }

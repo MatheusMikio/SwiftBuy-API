@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SwiftBuy.DataBase;
-using SwiftBuy.DTO;
+using SwiftBuy.DTO.Usuario;
 using SwiftBuy.Model;
 using SwiftBuy.Repositorio.Interfaces;
 
@@ -15,6 +15,12 @@ namespace SwiftBuy.Repositorio
         }
 
         public async Task<List<UsuarioModel>> GetUsuarios() => await _context.usuarios.OrderBy(usuario => usuario.Nome).ToListAsync();
+
+        public async Task<List<UsuarioModel>> GetUsuariosPaginacao(int pagina, int quantidade) => await _context.usuarios
+            .OrderBy(usuario => usuario.Nome)
+            .Skip((pagina - 1) * quantidade)
+            .Take(quantidade)
+            .ToListAsync();
 
         public async Task<UsuarioModel> GetUsuarioId(int id) => await _context.usuarios.FindAsync(id);
         public async Task<UsuarioModel> GetUsuarioCpf(string cpf) => await _context.usuarios.FirstOrDefaultAsync(usuario => usuario.CPF == cpf);
@@ -64,5 +70,8 @@ namespace SwiftBuy.Repositorio
 
             return userDuplicado;
         }
+
+        public async Task<UsuarioModel> LoginUsuario(string email) => await _context.usuarios
+            .FirstOrDefaultAsync(usuario => usuario.Email == email);
     }
 }

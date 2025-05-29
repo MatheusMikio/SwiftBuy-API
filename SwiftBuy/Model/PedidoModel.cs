@@ -10,8 +10,8 @@ namespace SwiftBuy.Model
         [Required]
         public UsuarioModel Usuario { get; set; }
         [Required]
-        public List<ProdutoModel> Produtos { get; set; }  = new();
-        public DateTime HoraPedido { get; set; } = DateTime.Now;
+        public List<PedidoProdutoModel> PedidoProdutos { get; set; } = new();
+        public DateTime HoraPedido { get; set; }
         [Required]
         public decimal ValorTotal { get; set; }
         public PedidoModel(){}

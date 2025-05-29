@@ -1,4 +1,4 @@
-﻿using SwiftBuy.DTO;
+﻿using SwiftBuy.DTO.Usuario;
 using SwiftBuy.Enums;
 using System.ComponentModel.DataAnnotations;
 
@@ -20,7 +20,7 @@ namespace SwiftBuy.Model
         [StringLength(11, MinimumLength = 11, ErrorMessage = "O CPF deve ter 11 dígitos!")]
         public string CPF { get; set; }
         [Required]
-        [StringLength(20, MinimumLength = 8, ErrorMessage = "A senha deve ter entre 8 e 20 caracteres.")]
+        [StringLength(60, MinimumLength = 8, ErrorMessage = "A senha deve ter entre 8 e 20 caracteres.")]
         public string Senha { get; set; }
         [Required]
         public PerfilEnum Tipo { get; set; }

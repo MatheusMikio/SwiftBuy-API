@@ -6,8 +6,9 @@ namespace SwiftBuy.Repositorio.Interfaces
     {
         Task<List<PedidoModel>>GetPedidos();
         Task<PedidoModel>GetPedidoId(int id);
+        Task<List<PedidoModel>> GetProdutosPaginacao(int pagina, int quantidade);
+        Task<UsuarioModel> GetUser(string cpf);
         Task<PedidoModel>AddPedido(PedidoModel pedido);
-        Task<PedidoModel>UpdatePedido(PedidoModel pedido);
-        Task<bool>DeletePedido(int id);
+        
     }
 }

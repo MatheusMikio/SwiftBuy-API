@@ -24,21 +24,6 @@ namespace SwiftBuy.Migrations
             MySqlModelBuilderExtensions.HasCharSet(modelBuilder, "utf8mb4");
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("PedidoModelProdutoModel", b =>
-                {
-                    b.Property<int>("PedidoModelsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProdutosId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PedidoModelsId", "ProdutosId");
-
-                    b.HasIndex("ProdutosId");
-
-                    b.ToTable("PedidoModelProdutoModel");
-                });
-
             modelBuilder.Entity("SwiftBuy.Model.ImagemModel", b =>
                 {
                     b.Property<int>("Id")
@@ -83,6 +68,32 @@ namespace SwiftBuy.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("pedidos");
+                });
+
+            modelBuilder.Entity("SwiftBuy.Model.PedidoProdutoModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("PedidoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProdutoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantidade")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PedidoId");
+
+                    b.HasIndex("ProdutoId");
+
+                    b.ToTable("produtos_pedido");
                 });
 
             modelBuilder.Entity("SwiftBuy.Model.ProdutoModel", b =>
@@ -167,8 +178,8 @@ namespace SwiftBuy.Migrations
 
                     b.Property<string>("Senha")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                        .HasMaxLength(60)
+                        .HasColumnType("varchar(60)");
 
                     b.Property<string>("Telefone")
                         .IsRequired()
@@ -181,21 +192,6 @@ namespace SwiftBuy.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("usuarios");
-                });
-
-            modelBuilder.Entity("PedidoModelProdutoModel", b =>
-                {
-                    b.HasOne("SwiftBuy.Model.PedidoModel", null)
-                        .WithMany()
-                        .HasForeignKey("PedidoModelsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SwiftBuy.Model.ProdutoModel", null)
-                        .WithMany()
-                        .HasForeignKey("ProdutosId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("SwiftBuy.Model.ImagemModel", b =>
@@ -220,6 +216,25 @@ namespace SwiftBuy.Migrations
                     b.Navigation("Usuario");
                 });
 
+            modelBuilder.Entity("SwiftBuy.Model.PedidoProdutoModel", b =>
+                {
+                    b.HasOne("SwiftBuy.Model.PedidoModel", "Pedido")
+                        .WithMany("PedidoProdutos")
+                        .HasForeignKey("PedidoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SwiftBuy.Model.ProdutoModel", "Produto")
+                        .WithMany("PedidoProdutos")
+                        .HasForeignKey("ProdutoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Pedido");
+
+                    b.Navigation("Produto");
+                });
+
             modelBuilder.Entity("SwiftBuy.Model.ProdutoModel", b =>
                 {
                     b.HasOne("SwiftBuy.Model.PromocaoProdutoModel", null)
@@ -227,9 +242,16 @@ namespace SwiftBuy.Migrations
                         .HasForeignKey("PromocaoProdutoModelId");
                 });
 
+            modelBuilder.Entity("SwiftBuy.Model.PedidoModel", b =>
+                {
+                    b.Navigation("PedidoProdutos");
+                });
+
             modelBuilder.Entity("SwiftBuy.Model.ProdutoModel", b =>
                 {
                     b.Navigation("ImagemProduto");
+
+                    b.Navigation("PedidoProdutos");
                 });
 
             modelBuilder.Entity("SwiftBuy.Model.PromocaoProdutoModel", b =>

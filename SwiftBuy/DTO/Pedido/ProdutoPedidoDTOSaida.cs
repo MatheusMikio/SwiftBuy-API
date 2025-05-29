@@ -1,14 +1,15 @@
-﻿using SwiftBuy.Model;
+﻿using SwiftBuy.DTO.Imagem;
 
-namespace SwiftBuy.DTO
+namespace SwiftBuy.DTO.Pedido
 {
-    public class ProdutoDTOSaida
+    public class ProdutoPedidoDTOSaida
     {
         public int Id { get; set; }
         public string Nome { get; set; }
         public string Descricao { get; set; }
         public string Categoria { get; set; }
         public decimal Preco { get; set; }
-        public List<ImagemModel> ImagemProduto { get; set; } = new();
+        public List<ImagemDTOSaida> ImagemProduto { get; set; } = new();
+        public int Quantidade { get; set; }
     }
 }

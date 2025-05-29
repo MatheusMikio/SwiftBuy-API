@@ -11,9 +11,8 @@ namespace SwiftBuy.Model
         public string Descricao { get; set; }
         public string Categoria { get; set; }
         public decimal Preco { get; set; }
-        public List<PedidoModel> Pedido { get; set; } = new();
+        public List<PedidoProdutoModel> PedidoProdutos { get; set; } = new();
         public List<ImagemModel> ImagemProduto { get; set; }
-
         public ProdutoModel(){ }
     }
 }

@@ -14,32 +14,30 @@ namespace SwiftBuy.Repositorio
         {
             _context = context;
         }
-        public Task<List<PedidoModel>> GetPedidos()
+        public async Task<List<PedidoModel>> GetPedidos() => await _context.pedidos
+            .Include(p => p.PedidoProdutos)
+            .ToListAsync();
+
+        public async Task<PedidoModel> GetPedidoId(int id) => await _context.pedidos
+            .Include(p => p.Usuario)
+            .Include(p => p.PedidoProdutos)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        public async Task<List<PedidoModel>> GetProdutosPaginacao(int pagina, int quantidade) => await _context.pedidos
+            .Include(p => p.Usuario)
+            .Include(p => p.PedidoProdutos)
+            .OrderBy(p => p.HoraPedido)
+            .Skip((pagina - 1) * quantidade)
+            .Take(quantidade)
+            .ToListAsync();
+
+        public async Task<UsuarioModel> GetUser(string cpf) => await _context.usuarios.FirstOrDefaultAsync(user => user.CPF == cpf);
+
+        public async Task<PedidoModel> AddPedido(PedidoModel pedido)
         {
-            throw new NotImplementedException();
+            _context.pedidos.Add(pedido);
+            await _context.SaveChangesAsync();
+            return pedido;
         }
-
-        public Task<PedidoModel> GetPedidoId(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PedidoModel> AddPedido(PedidoModel pedido)
-        {
-            throw new NotImplementedException();
-        }
-        public Task<PedidoModel> UpdatePedido(PedidoModel pedido)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> DeletePedido(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        
-
-
     }
 }

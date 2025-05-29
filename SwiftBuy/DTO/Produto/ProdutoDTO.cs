@@ -1,6 +1,7 @@
-﻿using SwiftBuy.Model;
+﻿using SwiftBuy.DTO.Imagem;
+using SwiftBuy.Model;
 
-namespace SwiftBuy.DTO
+namespace SwiftBuy.DTO.Produto
 {
     public class ProdutoDTO
     {
@@ -8,6 +9,6 @@ namespace SwiftBuy.DTO
         public string Descricao { get; set; }
         public string Categoria { get; set; }
         public decimal Preco { get; set; }
-        public List<ImagemModelDTO> ImagemProduto { get; set; } = new();
+        public List<ImagemDTO> ImagemProduto { get; set; } = new();
     }
 }

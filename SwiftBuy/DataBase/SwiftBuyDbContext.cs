@@ -14,7 +14,8 @@ public partial class SwiftBuyDbContext : DbContext
     public DbSet<PedidoModel> pedidos { get; set; }
     public DbSet<PromocaoProdutoModel> promocoes { get; set; }
     public DbSet<ImagemModel> imagens { get; set; }
-    
+    public DbSet<PedidoProdutoModel> produtos_pedido { get; set; }
+
 
     public SwiftBuyDbContext(DbContextOptions<SwiftBuyDbContext> options)
         : base(options)

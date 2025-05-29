@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SwiftBuy.DTO;
+using SwiftBuy.DTO.Usuario;
 using SwiftBuy.Model;
 using SwiftBuy.Services.Interfaces;
 
@@ -18,14 +18,19 @@ namespace SwiftBuy.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllUser() => Ok(await _usuarioService.GetUsuarios());
+        public async Task<IActionResult> GetAllUser([FromQuery] int? pagina, [FromQuery] int? tamanho)
+        {
+            if (pagina.HasValue && tamanho.HasValue) return Ok(await _usuarioService.GetUsuariosPaginacao(pagina.Value, tamanho.Value));
+
+            return Ok(await _usuarioService.GetUsuarios());
+        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserId(int id)
         {
             UsuarioDTOSaida user = await _usuarioService.GetUsuarioId(id);
 
-            if(user == null) return NotFound("Usuário não encontrado!");
+            if (user == null) return NotFound("Usuário não encontrado!");
 
             return Ok(user);
         }
@@ -35,7 +40,7 @@ namespace SwiftBuy.Controllers
         {
             if (usuarioDTO == null) return BadRequest("É necessário informar um usuário!");
 
-            UsuarioModel usuario = await _usuarioService.AddUsuario(usuarioDTO);
+            UsuarioDTOSaida usuario = await _usuarioService.AddUsuario(usuarioDTO);
 
             if (usuario == null) return BadRequest("Já existe um usuário com esse CPF ou e-mail!");
 
@@ -50,7 +55,7 @@ namespace SwiftBuy.Controllers
 
             if (usuarioCpf == null) return NotFound("Usuário não encontrado!");
 
-            UsuarioModel usuario = await _usuarioService.UpdateUsuario(usuarioDTO);
+            UsuarioDTOSaida usuario = await _usuarioService.UpdateUsuario(usuarioDTO);
 
             if (usuario == null) return BadRequest("Já existe um usuário com esse CPF ou e-mail!");
 
@@ -66,7 +71,7 @@ namespace SwiftBuy.Controllers
 
             if (usuarioId == null) return NotFound("Usuário não encontrado!");
 
-            UsuarioModel usuario = await _usuarioService.UpdateUsuario(usuarioDTO, id);
+            UsuarioDTOSaida usuario = await _usuarioService.UpdateUsuario(usuarioDTO, id);
 
             if (usuario == null) return BadRequest("Já existe um usuário com esse CPF ou e-mail!");
 
@@ -77,9 +82,21 @@ namespace SwiftBuy.Controllers
         {
             if (string.IsNullOrEmpty(cpf)) return BadRequest("É necessário informar um CPF!");
 
-            UsuarioModel usuario = await _usuarioService.DeleteUsuario(cpf);
+            UsuarioDTOSaida usuario = await _usuarioService.DeleteUsuario(cpf);
 
             if (usuario == null) return NotFound("Usuário não encontrado!");
+
+            return Ok(usuario);
+        }
+
+        [HttpGet("login")]
+        public async Task<IActionResult> LoginUser(string email, string senha)
+        {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(senha)) return BadRequest("É necessário informar CPF e senha!");
+
+            UsuarioDTOSaida usuario = await _usuarioService.LoginUsuario(email, senha);
+
+            if (usuario == null) return Unauthorized("CPF ou senha inválidos!");
 
             return Ok(usuario);
         }

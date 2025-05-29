@@ -19,17 +19,17 @@ namespace SwiftBuy.Migrations
                 name: "promocoes",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    nome = table.Column<string>(type: "longtext", nullable: false, collation: "utf8mb4_0900_ai_ci")
+                    Nome = table.Column<string>(type: "longtext", nullable: false, collation: "utf8mb4_0900_ai_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    porcentagem = table.Column<int>(type: "int", nullable: false),
-                    dataInicio = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    dataFim = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    Porcentagem = table.Column<int>(type: "int", nullable: false),
+                    DataInicio = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DataFim = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_promocoes", x => x.id);
+                    table.PrimaryKey("PK_promocoes", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4")
                 .Annotation("Relational:Collation", "utf8mb4_0900_ai_ci");
@@ -42,13 +42,15 @@ namespace SwiftBuy.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Nome = table.Column<string>(type: "longtext", nullable: false, collation: "utf8mb4_0900_ai_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Telefone = table.Column<string>(type: "longtext", nullable: false, collation: "utf8mb4_0900_ai_ci")
+                    Telefone = table.Column<string>(type: "varchar(11)", maxLength: 11, nullable: false, collation: "utf8mb4_0900_ai_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Email = table.Column<string>(type: "longtext", nullable: false, collation: "utf8mb4_0900_ai_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Senha = table.Column<string>(type: "longtext", nullable: false, collation: "utf8mb4_0900_ai_ci")
+                    CPF = table.Column<string>(type: "varchar(11)", maxLength: 11, nullable: false, collation: "utf8mb4_0900_ai_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    tipo = table.Column<int>(type: "int", nullable: false)
+                    Senha = table.Column<string>(type: "varchar(60)", maxLength: 60, nullable: false, collation: "utf8mb4_0900_ai_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Tipo = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -67,19 +69,19 @@ namespace SwiftBuy.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Descricao = table.Column<string>(type: "longtext", nullable: false, collation: "utf8mb4_0900_ai_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Preco = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
-                    DescricaoDetalhada = table.Column<string>(type: "longtext", nullable: false, collation: "utf8mb4_0900_ai_ci")
+                    Categoria = table.Column<string>(type: "longtext", nullable: false, collation: "utf8mb4_0900_ai_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    PromocaoProdutoModelid = table.Column<int>(type: "int", nullable: true)
+                    Preco = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    PromocaoProdutoModelId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_produtos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_produtos_promocoes_PromocaoProdutoModelid",
-                        column: x => x.PromocaoProdutoModelid,
+                        name: "FK_produtos_promocoes_PromocaoProdutoModelId",
+                        column: x => x.PromocaoProdutoModelId,
                         principalTable: "promocoes",
-                        principalColumn: "id");
+                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4")
                 .Annotation("Relational:Collation", "utf8mb4_0900_ai_ci");
@@ -115,43 +117,43 @@ namespace SwiftBuy.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     UrlImagem = table.Column<string>(type: "longtext", nullable: false, collation: "utf8mb4_0900_ai_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ImagemThumb = table.Column<string>(type: "longtext", nullable: false, collation: "utf8mb4_0900_ai_ci")
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ProdutoId = table.Column<int>(type: "int", nullable: false),
-                    principal = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    ProdutoModelId = table.Column<int>(type: "int", nullable: true)
+                    ProdutoId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_imagens", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_imagens_produtos_ProdutoModelId",
-                        column: x => x.ProdutoModelId,
+                        name: "FK_imagens_produtos_ProdutoId",
+                        column: x => x.ProdutoId,
                         principalTable: "produtos",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4")
                 .Annotation("Relational:Collation", "utf8mb4_0900_ai_ci");
 
             migrationBuilder.CreateTable(
-                name: "PedidoModelProdutoModel",
+                name: "produtos_pedido",
                 columns: table => new
                 {
-                    pedidoModelsId = table.Column<int>(type: "int", nullable: false),
-                    produtosId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    PedidoId = table.Column<int>(type: "int", nullable: false),
+                    ProdutoId = table.Column<int>(type: "int", nullable: false),
+                    Quantidade = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PedidoModelProdutoModel", x => new { x.pedidoModelsId, x.produtosId });
+                    table.PrimaryKey("PK_produtos_pedido", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PedidoModelProdutoModel_pedidos_pedidoModelsId",
-                        column: x => x.pedidoModelsId,
+                        name: "FK_produtos_pedido_pedidos_PedidoId",
+                        column: x => x.PedidoId,
                         principalTable: "pedidos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PedidoModelProdutoModel_produtos_produtosId",
-                        column: x => x.produtosId,
+                        name: "FK_produtos_pedido_produtos_ProdutoId",
+                        column: x => x.ProdutoId,
                         principalTable: "produtos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -160,14 +162,9 @@ namespace SwiftBuy.Migrations
                 .Annotation("Relational:Collation", "utf8mb4_0900_ai_ci");
 
             migrationBuilder.CreateIndex(
-                name: "IX_imagens_ProdutoModelId",
+                name: "IX_imagens_ProdutoId",
                 table: "imagens",
-                column: "ProdutoModelId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PedidoModelProdutoModel_produtosId",
-                table: "PedidoModelProdutoModel",
-                column: "produtosId");
+                column: "ProdutoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_pedidos_UsuarioId",
@@ -175,9 +172,19 @@ namespace SwiftBuy.Migrations
                 column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_produtos_PromocaoProdutoModelid",
+                name: "IX_produtos_PromocaoProdutoModelId",
                 table: "produtos",
-                column: "PromocaoProdutoModelid");
+                column: "PromocaoProdutoModelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_produtos_pedido_PedidoId",
+                table: "produtos_pedido",
+                column: "PedidoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_produtos_pedido_ProdutoId",
+                table: "produtos_pedido",
+                column: "ProdutoId");
         }
 
         /// <inheritdoc />
@@ -187,7 +194,7 @@ namespace SwiftBuy.Migrations
                 name: "imagens");
 
             migrationBuilder.DropTable(
-                name: "PedidoModelProdutoModel");
+                name: "produtos_pedido");
 
             migrationBuilder.DropTable(
                 name: "pedidos");

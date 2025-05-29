@@ -1,4 +1,4 @@
-﻿using SwiftBuy.DTO;
+﻿using SwiftBuy.DTO.Usuario;
 using SwiftBuy.Model;
 
 namespace SwiftBuy.Services.Interfaces
@@ -6,11 +6,14 @@ namespace SwiftBuy.Services.Interfaces
     public interface IUsuarioService
     {
         Task<List<UsuarioDTOSaida>> GetUsuarios();
+        Task<List<UsuarioDTOSaida>> GetUsuariosPaginacao(int pagina, int tamanho);
         Task<UsuarioDTOSaida> GetUsuarioId(int id);
-        Task<UsuarioModel> AddUsuario(UsuarioDTO usuario);
-        Task<UsuarioModel> UpdateUsuario(UsuarioDTO usuario, int id);
-        Task<UsuarioModel> UpdateUsuario(UsuarioDTO usuario);
-        Task<UsuarioModel> DeleteUsuario(string cpf);
+        Task<UsuarioDTOSaida> AddUsuario(UsuarioDTO usuario);
+        Task<UsuarioDTOSaida> UpdateUsuario(UsuarioDTO usuario, int id);
+        Task<UsuarioDTOSaida> UpdateUsuario(UsuarioDTO usuario);
+        Task<UsuarioDTOSaida> DeleteUsuario(string cpf);
         Task<UsuarioDTOSaida> GetUsuarioCpf(UsuarioDTO usuario);
+
+        Task<UsuarioDTOSaida> LoginUsuario(string email, string senha);
     }
 }
