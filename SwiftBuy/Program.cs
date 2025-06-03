@@ -30,12 +30,15 @@ namespace SwiftBuy
             builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
             builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 
+            //Injeção de Dependência das Promoções
+            builder.Services.AddScoped<IPromocaoRepositorio, PromocaoRepositorio>();
+
             //builder.Services.AddControllers().AddJsonOptions(options =>
             //{
             //    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             //});
 
-            //Integração api
+            //Não mexer
             builder.Services.AddHttpClient();
 
             builder.Services.AddControllers();

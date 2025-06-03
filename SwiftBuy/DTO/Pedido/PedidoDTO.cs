@@ -5,6 +5,6 @@ namespace SwiftBuy.DTO.Pedido
     public class PedidoDTO
     {
         public int UsuarioId { get; set; }
-        public List<ProdutoPedido> Produtos { get; set; } = new();
+        public List<ProdutoPedidoModel> Produtos { get; set; } = new();
     }
 }

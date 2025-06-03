@@ -13,6 +13,7 @@ namespace SwiftBuy.Model
         public decimal Preco { get; set; }
         public List<PedidoProdutoModel> PedidoProdutos { get; set; } = new();
         public List<ImagemModel> ImagemProduto { get; set; }
+        public List<PromocaoModel> Promocoes { get; set; } = new();
         public ProdutoModel(){ }
     }
 }

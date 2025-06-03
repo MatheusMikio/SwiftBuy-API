@@ -143,7 +143,7 @@ namespace SwiftBuy.Services
         {
             List<PedidoProdutoModel> produtos = new();
 
-            foreach (ProdutoPedido produto in pedido.Produtos)
+            foreach (ProdutoPedidoModel produto in pedido.Produtos)
             {
                 PedidoProdutoModel produtoDb = new()
                 {
