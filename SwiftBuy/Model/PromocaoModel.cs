@@ -2,7 +2,7 @@
 
 namespace SwiftBuy.Model
 {
-    public class PromocaoProdutoModel
+    public class PromocaoModel
     {
         [Key]
         public int Id { get; set; }
@@ -12,6 +12,6 @@ namespace SwiftBuy.Model
         public DateTime DataFim { get; set; }
         public List<ProdutoModel> Produtos { get; set; } = new();
 
-        public PromocaoProdutoModel(){ }
+        public PromocaoModel(){ }
     }
 }

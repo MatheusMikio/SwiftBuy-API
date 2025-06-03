@@ -12,7 +12,7 @@ public partial class SwiftBuyDbContext : DbContext
     public DbSet<UsuarioModel> usuarios { get; set; }
     public DbSet<ProdutoModel> produtos { get; set; }
     public DbSet<PedidoModel> pedidos { get; set; }
-    public DbSet<PromocaoProdutoModel> promocoes { get; set; }
+    public DbSet<PromocaoModel> promocoes { get; set; }
     public DbSet<ImagemModel> imagens { get; set; }
     public DbSet<PedidoProdutoModel> produtos_pedido { get; set; }
 

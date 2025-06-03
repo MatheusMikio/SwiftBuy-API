@@ -62,6 +62,30 @@ namespace SwiftBuy.Services
             return produtos;
         }
 
+        public async Task<List<ProdutoDTOSaida>> GetProdutosCategoria(string categoria)
+        {
+            List<ProdutoModel> produtosDb = await _produtoRepositorio.getProdutosCategoria(categoria);
+            List<ProdutoDTOSaida> produtos = new();
+            foreach (ProdutoModel produto in produtosDb)
+            {
+                ProdutoDTOSaida prod = new()
+                {
+                    Id = produto.Id,
+                    Nome = produto.Nome,
+                    Descricao = produto.Descricao,
+                    Categoria = produto.Categoria,
+                    Preco = produto.Preco,
+                    ImagemProduto = produto.ImagemProduto?.Select(img => new ImagemDTOSaida
+                    {
+                        UrlImagem = img.UrlImagem,
+                        ProdutoId = img.ProdutoId
+                    }).ToList()
+                };
+                produtos.Add(prod);
+            }
+            return produtos;
+        }
+
         public async Task<List<ProdutoDTOSaida>> GetProdutosMaisVendidos()
         {
             List<ProdutoModel> produtosDb = await _produtoRepositorio.GetProdutosMaisVendidos();

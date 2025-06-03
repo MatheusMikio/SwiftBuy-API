@@ -12,7 +12,7 @@ using SwiftBuy.DataBase;
 namespace SwiftBuy.Migrations
 {
     [DbContext(typeof(SwiftBuyDbContext))]
-    [Migration("20250528200533_MigracaoInicial")]
+    [Migration("20250529080000_MigracaoInicial")]
     partial class MigracaoInicial
     {
         /// <inheritdoc />

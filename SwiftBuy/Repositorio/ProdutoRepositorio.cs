@@ -31,13 +31,16 @@ namespace SwiftBuy.Repositorio
             .OrderByDescending(p => p.PedidoProdutos.Sum(pp => pp.Quantidade))
             .ToListAsync();
 
-        public async Task<ProdutoModel> GetProdutoId(int id) => await _context.produtos.Include(p => p.ImagemProduto).FirstOrDefaultAsync(p => p.Id == id);
+        public async Task<List<ProdutoModel>> getProdutosCategoria(string categoria) => await _context.produtos
+            .Include(p => p.ImagemProduto)
+            .Where(p => p.Categoria == categoria)
+            .OrderBy(p => p.Nome)
+            .ToListAsync();
 
-        public async Task<ProdutoModel> GetProdutoNome(string nome)
-        {
-            ProdutoModel produto = await _context.produtos.Include(p => p.ImagemProduto).FirstOrDefaultAsync(p => p.Nome == nome);
-            return produto;
-        }
+        public async Task<ProdutoModel?> GetProdutoId(int id) => await _context.produtos.Include(p => p.ImagemProduto).FirstOrDefaultAsync(p => p.Id == id);
+
+        public async Task<ProdutoModel?> GetProdutoNome(string nome) => await _context.produtos.Include(p => p.ImagemProduto).FirstOrDefaultAsync(p => p.Nome == nome);
+
 
         public async Task<ProdutoModel> AddProduto(ProdutoModel produto)
         {

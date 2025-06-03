@@ -10,6 +10,7 @@ namespace SwiftBuy.Repositorio.Interfaces
         Task<List<ProdutoModel>> GetProdutosPreco();
         Task<List<ProdutoModel>> GetProdutosPaginacao(int pagina, int tamanho);
         Task<List<ProdutoModel>> GetProdutosMaisVendidos();
+        Task<List<ProdutoModel>> getProdutosCategoria(string categoria);
         Task<ProdutoModel> GetProdutoId(int id);
         Task<ProdutoModel> GetProdutoNome(string nome);
         Task<ProdutoModel> AddProduto(ProdutoModel produto);

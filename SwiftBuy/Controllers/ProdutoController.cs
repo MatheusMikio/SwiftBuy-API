@@ -18,9 +18,11 @@ namespace SwiftBuy.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllProdutos([FromQuery]int ? pagina, [FromQuery]int ? tamanho)
+        public async Task<IActionResult> GetAllProdutos([FromQuery]int ? pagina, [FromQuery]int ? tamanho, [FromQuery] string ? categoria)
         {
             if (pagina.HasValue && tamanho.HasValue) return Ok(await _produtoService.GetProdutosPaginacao(pagina.Value, tamanho.Value));
+
+            if (categoria != null) return Ok(await _produtoService.GetProdutosCategoria(categoria));
 
             return Ok(await _produtoService.GetProdutos());
         }
@@ -36,7 +38,8 @@ namespace SwiftBuy.Controllers
             if (produto == null) return NotFound("Produto não encontrado!");
 
             return Ok(produto);
-        }
+        } 
+
 
         [HttpGet("preco")]
         public async Task<IActionResult> GetProdutosPreco()
