@@ -82,8 +82,8 @@ namespace SwiftBuy.Controllers
 
             if (promocao == null) return NotFound("Promoção não encontrada.");
 
-            if (promocaoDTO.DataInicio > promocaoDTO.DataFim || promocaoDTO.DataInicio < DateTime.Now)
-                return BadRequest("Só é permitido datas atuais e futuras e a data de inicio não pode ser maior que a data de finalização");
+            if (promocao.DataInicio >= promocao.DataFim || promocao.DataInicio <= DateTime.Now)
+                return BadRequest("Só é permitido datas atuais e futuras e a data de inicio não pode ser maior ou igual que a data de finalização");
 
             promocaoDTO.SetId(id);
 
