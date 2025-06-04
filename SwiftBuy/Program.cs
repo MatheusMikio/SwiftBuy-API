@@ -32,6 +32,7 @@ namespace SwiftBuy
 
             //Injeção de Dependência das Promoções
             builder.Services.AddScoped<IPromocaoRepositorio, PromocaoRepositorio>();
+            builder.Services.AddScoped<IPromocaoService, PromocaoService>();
 
             //builder.Services.AddControllers().AddJsonOptions(options =>
             //{

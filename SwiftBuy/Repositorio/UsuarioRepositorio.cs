@@ -16,11 +16,17 @@ namespace SwiftBuy.Repositorio
 
         public async Task<List<UsuarioModel>> GetUsuarios() => await _context.usuarios.OrderBy(usuario => usuario.Nome).ToListAsync();
 
-        public async Task<List<UsuarioModel>> GetUsuariosPaginacao(int pagina, int quantidade) => await _context.usuarios
+        public async Task<List<UsuarioModel>> GetUsuariosPaginacao(int pagina, int tamanho)
+        {
+            if (pagina < 1) pagina = 1;
+            if (tamanho < 1) tamanho = 10;
+
+            return await _context.usuarios
             .OrderBy(usuario => usuario.Nome)
-            .Skip((pagina - 1) * quantidade)
-            .Take(quantidade)
+            .Skip((pagina - 1) * tamanho)
+            .Take(tamanho)
             .ToListAsync();
+        }
 
         public async Task<UsuarioModel> GetUsuarioId(int id) => await _context.usuarios.FindAsync(id);
         public async Task<UsuarioModel> GetUsuarioCpf(string cpf) => await _context.usuarios.FirstOrDefaultAsync(usuario => usuario.CPF == cpf);

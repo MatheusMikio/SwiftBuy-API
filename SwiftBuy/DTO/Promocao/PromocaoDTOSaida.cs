@@ -10,6 +10,6 @@ namespace SwiftBuy.DTO
         public int Porcentagem { get; set; }
         public DateTime DataInicio { get; set; }
         public DateTime DataFim { get; set; }
-        public List<ProdutoDTOSaida> Produtos { get; set; } = new();
+        public List<ProdutoDTOSaida> ? Produtos { get; set; } = new();
     }
 }

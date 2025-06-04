@@ -18,18 +18,25 @@ namespace SwiftBuy.Repositorio
             .Include(p => p.PedidoProdutos)
             .ToListAsync();
 
-        public async Task<PedidoModel> GetPedidoId(int id) => await _context.pedidos
+        public async Task<PedidoModel?> GetPedidoId(int id) => await _context.pedidos
             .Include(p => p.Usuario)
             .Include(p => p.PedidoProdutos)
             .FirstOrDefaultAsync(p => p.Id == id);
 
-        public async Task<List<PedidoModel>> GetProdutosPaginacao(int pagina, int quantidade) => await _context.pedidos
+        public async Task<List<PedidoModel>> GetProdutosPaginacao(int pagina, int tamanho) 
+        {
+            if (pagina < 1) pagina = 1;
+            if (tamanho < 1) tamanho = 10;
+
+            return await _context.pedidos
             .Include(p => p.Usuario)
             .Include(p => p.PedidoProdutos)
             .OrderBy(p => p.HoraPedido)
-            .Skip((pagina - 1) * quantidade)
-            .Take(quantidade)
+            .Skip((pagina - 1) * tamanho)
+            .Take(tamanho)
             .ToListAsync();
+        }
+
 
         public async Task<UsuarioModel> GetUser(string cpf) => await _context.usuarios.FirstOrDefaultAsync(user => user.CPF == cpf);
 

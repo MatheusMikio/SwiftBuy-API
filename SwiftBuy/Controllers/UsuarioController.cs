@@ -96,7 +96,7 @@ namespace SwiftBuy.Controllers
 
             UsuarioDTOSaida usuario = await _usuarioService.LoginUsuario(email, senha);
 
-            if (usuario == null) return Unauthorized("CPF ou senha inválidos!");
+            if (usuario == null) return Unauthorized("Email ou senha inválidos!");
 
             return Ok(usuario);
         }

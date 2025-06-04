@@ -15,13 +15,37 @@ namespace SwiftBuy.Repositorio
             _context = context;
         }
 
-        public async Task<List<PromocaoModel>> GetPromocoes() => await _context.promocoes.OrderBy(promocao => promocao.Nome).ToListAsync();
-        public async Task<List<PromocaoModel>> GetPromocoesPaginacao(int pagina, int tamanho) => await _context.promocoes
-            .Skip((pagina - 1) * tamanho)
-            .Take(tamanho)
-            .OrderBy(p => p.Nome)
+        public async Task<List<PromocaoModel>> GetPromocoes() => await _context.promocoes
+            .OrderBy(promocao => promocao.Nome)
+            .Include(promocao => promocao.Produtos)
+            .ThenInclude(produto => produto.ImagemProduto)
+            .OrderBy(p => p.Id)
             .ToListAsync();
-        public async Task<PromocaoModel> GetPromocaoId(int id) => await _context.promocoes.FindAsync(id);
+
+        public async Task<List<PromocaoModel>> GetPromocoesPaginacao(int pagina, int tamanho)
+        {
+            if (pagina < 1) pagina = 1;
+            if (tamanho < 1) tamanho = 10;
+
+            return await _context.promocoes
+                .Include(promocao => promocao.Produtos)
+                .ThenInclude(produto => produto.ImagemProduto)
+                .OrderBy(p => p.Id)
+                .Skip((pagina - 1) * tamanho)
+                .Take(tamanho)
+                .ToListAsync();
+        }
+
+
+        public async Task<PromocaoModel?> GetPromocaoId(int id) => await _context.promocoes.
+            Include(promocao => promocao.Produtos)
+            .ThenInclude(produto => produto.ImagemProduto)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        public async Task<PromocaoModel?>GetPromocaoNome(string nome) => await _context.promocoes
+            .Include(p => p.Produtos)
+            .ThenInclude(p => p.ImagemProduto)
+            .FirstOrDefaultAsync(p => p.Nome == nome);
 
         public async Task<PromocaoModel> AddPromocao(PromocaoModel promocao)
         {

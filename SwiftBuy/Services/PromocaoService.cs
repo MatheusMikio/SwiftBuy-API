@@ -29,14 +29,14 @@ namespace SwiftBuy.Services
                 Porcentagem = p.Porcentagem,
                 DataInicio = p.DataInicio,
                 DataFim = p.DataFim,
-                Produtos = p.Produtos.Select(produto => new ProdutoDTOSaida
+                Produtos = (p.Produtos ?? new List<ProdutoModel>()).Select(produto => new ProdutoDTOSaida
                 {
                     Id = produto.Id,
                     Nome = produto.Nome,
                     Preco = produto.Preco,
                     Descricao = produto.Descricao,
                     Categoria = produto.Categoria,
-                    ImagemProduto = produto.ImagemProduto.Select(imagem => new ImagemDTOSaida
+                    ImagemProduto = (produto.ImagemProduto ?? new List<ImagemModel>()).Select(imagem => new ImagemDTOSaida
                     {
                         UrlImagem = imagem.UrlImagem,
                         ProdutoId = imagem.ProdutoId
@@ -44,6 +44,7 @@ namespace SwiftBuy.Services
                 }).ToList()
             }).ToList();
         }
+
 
         public async Task<List<PromocaoDTOSaida>> GetPromocoesPaginacao(int pagina, int tamanho)
         {
@@ -55,14 +56,14 @@ namespace SwiftBuy.Services
                 Porcentagem = p.Porcentagem,
                 DataInicio = p.DataInicio,
                 DataFim = p.DataFim,
-                Produtos = p.Produtos.Select(produto => new ProdutoDTOSaida
+                Produtos = (p.Produtos ?? new List<ProdutoModel>()).Select(produto => new ProdutoDTOSaida
                 {
                     Id = produto.Id,
                     Nome = produto.Nome,
                     Preco = produto.Preco,
                     Descricao = produto.Descricao,
                     Categoria = produto.Categoria,
-                    ImagemProduto = produto.ImagemProduto.Select(imagem => new ImagemDTOSaida
+                    ImagemProduto = (produto.ImagemProduto ?? new List<ImagemModel>()).Select(imagem => new ImagemDTOSaida
                     {
                         UrlImagem = imagem.UrlImagem,
                         ProdutoId = imagem.ProdutoId
@@ -82,14 +83,14 @@ namespace SwiftBuy.Services
                 Porcentagem = promocao.Porcentagem,
                 DataInicio = promocao.DataInicio,
                 DataFim = promocao.DataFim,
-                Produtos = promocao.Produtos.Select(produto => new ProdutoDTOSaida
+                Produtos = (promocao.Produtos ?? new List<ProdutoModel>()).Select(produto => new ProdutoDTOSaida
                 {
                     Id = produto.Id,
                     Nome = produto.Nome,
                     Preco = produto.Preco,
                     Descricao = produto.Descricao,
                     Categoria = produto.Categoria,
-                    ImagemProduto = produto.ImagemProduto.Select(imagem => new ImagemDTOSaida
+                    ImagemProduto = (produto.ImagemProduto ?? new List<ImagemModel>()).Select(imagem => new ImagemDTOSaida
                     {
                         UrlImagem = imagem.UrlImagem,
                         ProdutoId = imagem.ProdutoId
@@ -99,9 +100,36 @@ namespace SwiftBuy.Services
             return promocaoDTO;
         }
 
+        public async Task<PromocaoDTOSaida> GetPromocaoNome(string nome)
+        {
+            PromocaoModel ? promocaodb = await _promocaoRepositorio.GetPromocaoNome(nome);
+            if (promocaodb == null) return null;
+            PromocaoDTOSaida promocao = new()
+            {
+                Nome = nome,
+                Porcentagem = promocaodb.Porcentagem,
+                DataInicio = promocaodb.DataInicio,
+                DataFim = promocaodb.DataFim,
+                Produtos = (promocaodb.Produtos ?? new List<ProdutoModel>()).Select(produto => new ProdutoDTOSaida
+                {
+                    Id = produto.Id,
+                    Nome = produto.Nome,
+                    Preco = produto.Preco,
+                    Descricao = produto.Descricao,
+                    Categoria = produto.Categoria,
+                    ImagemProduto = (produto.ImagemProduto ?? new List<ImagemModel>()).Select(imagem => new ImagemDTOSaida
+                    {
+                        UrlImagem = imagem.UrlImagem,
+                        ProdutoId = imagem.ProdutoId
+                    }).ToList()
+                }).ToList()
+            };
+            return promocao;
+        }
+
         public async Task<PromocaoDTOSaida> AddPromocao(PromocaoDTO promocao)
         {
-            PromocaoModel promocaoBd = await _promocaoRepositorio.ValidaPromocao(promocao.Nome);
+            PromocaoModel ? promocaoBd = await _promocaoRepositorio.ValidaPromocao(promocao.Nome);
 
             if (promocaoBd != null) return null;
 
@@ -112,7 +140,6 @@ namespace SwiftBuy.Services
                 {
                     ProdutoModel produto = await _produtoRepositorio.GetProdutoId(id);
                     if (produto != null) produtos.Add(produto);
-
                 }
             }
 
@@ -150,20 +177,45 @@ namespace SwiftBuy.Services
             };
         }
 
-        public async Task<PromocaoDTO> DeletePromocao(PromocaoDTO promocao)
+        public async Task<PromocaoDTOSaida> AdicionarProdutoPromocao(int promocaoId, int produtoId)
         {
-            PromocaoModel promocaoBd = await _promocaoRepositorio.ValidaPromocao(promocao.Nome);
+            PromocaoModel promocao = await _promocaoRepositorio.GetPromocaoId(promocaoId);
 
-            if (promocaoBd != null) return null;
+            if (promocao == null) return null;
 
-            await _promocaoRepositorio.DeletePromocao(promocaoBd);
+            ProdutoModel produto = await _produtoRepositorio.GetProdutoId(produtoId);
 
-            return promocao;
+            if (produto == null) return null;
+
+            if (promocao.Produtos.Any(p => p.Id == produtoId)) return await GetPromocaoPorId(promocaoId);
+
+            promocao.Produtos.Add(produto);
+
+            await _promocaoRepositorio.UpdatePromocao(promocao);
+
+            return await GetPromocaoPorId(promocaoId);
         }
+
+        public async Task<PromocaoDTOSaida> RemoverProdutoPromocao(int promocaoId, int produtoId)
+        {
+            PromocaoModel promocao = await _promocaoRepositorio.GetPromocaoId(promocaoId);
+
+            if (promocao == null) return null;
+
+            ProdutoModel produto = promocao.Produtos.FirstOrDefault(p => p.Id == produtoId);
+
+            if (produto == null) return await GetPromocaoPorId(promocaoId);
+
+            promocao.Produtos.Remove(produto);
+            await _promocaoRepositorio.UpdatePromocao(promocao);
+
+            return await GetPromocaoPorId(promocaoId);
+        }
+
 
         public async Task<PromocaoDTOSaida> UpdatePromocao(PromocaoDTO promocao)
         {
-            PromocaoModel promocaoBd = await _promocaoRepositorio.ValidaPromocaoUpdate(promocao);
+            PromocaoModel ? promocaoBd = await _promocaoRepositorio.ValidaPromocaoUpdate(promocao);
 
             if (promocaoBd != null) return null;
 
@@ -173,6 +225,7 @@ namespace SwiftBuy.Services
             promocaoAtualizada.DataInicio = promocao.DataInicio;
             promocaoAtualizada.DataFim = promocao.DataFim;
 
+            await _promocaoRepositorio.UpdatePromocao(promocaoAtualizada);
             return new PromocaoDTOSaida
             {
                 Id = promocaoAtualizada.Id,
@@ -181,6 +234,21 @@ namespace SwiftBuy.Services
                 DataInicio = promocaoAtualizada.DataInicio,
                 DataFim = promocaoAtualizada.DataFim,
             };
+            
+
         }
+
+        public async Task<PromocaoDTO> DeletePromocao(PromocaoDTO promocao)
+        {
+            PromocaoModel ? promocaoBd = await _promocaoRepositorio.ValidaPromocao(promocao.Nome);
+
+            if (promocaoBd == null) return null;
+
+            await _promocaoRepositorio.DeletePromocao(promocaoBd);
+
+            return promocao;
+        }
+
+
     }
 }

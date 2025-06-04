@@ -16,12 +16,20 @@ namespace SwiftBuy.Repositorio
 
         public async Task<List<ProdutoModel>> GetProdutos() => await _context.produtos.Include(p => p.ImagemProduto).OrderBy(p => p.Nome).ToListAsync();
 
-        public async Task<List<ProdutoModel>> GetProdutosPaginacao(int pagina, int tamanho) => await _context.produtos
+        public async Task<List<ProdutoModel>> GetProdutosPaginacao(int pagina, int tamanho)
+        {
+
+            if (pagina < 1) pagina = 1;
+            if (tamanho < 1) tamanho = 10;
+
+             return await _context.produtos
             .Include(p => p.ImagemProduto)
             .Skip((pagina - 1) * tamanho)
             .Take(tamanho)
             .OrderBy(p => p.Nome)
             .ToListAsync();
+        }
+        
 
         public async Task<List<ProdutoModel>> GetProdutosPreco() => await _context.produtos.Include(p => p.ImagemProduto).OrderBy(p => p.Preco).ToListAsync();
 

@@ -9,6 +9,7 @@ namespace SwiftBuy.Repositorio.Interfaces
         Task<List<PromocaoModel>> GetPromocoes();
         Task<List<PromocaoModel>> GetPromocoesPaginacao(int pagina, int tamanho);
         Task<PromocaoModel> GetPromocaoId(int id);
+        Task<PromocaoModel> GetPromocaoNome(string nome);
         Task<PromocaoModel> AddPromocao(PromocaoModel promocao);
         Task<PromocaoModel> UpdatePromocao(PromocaoModel promocao);
         Task<PromocaoModel> DeletePromocao(PromocaoModel promocao);
