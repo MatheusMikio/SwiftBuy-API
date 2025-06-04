@@ -12,8 +12,8 @@ using SwiftBuy.DataBase;
 namespace SwiftBuy.Migrations
 {
     [DbContext(typeof(SwiftBuyDbContext))]
-    [Migration("20250603081237_migracaoInicial")]
-    partial class migracaoInicial
+    [Migration("20250604094414_MigracaoInicial")]
+    partial class MigracaoInicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

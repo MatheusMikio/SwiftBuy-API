@@ -37,7 +37,7 @@ namespace SwiftBuy.Controllers
             if (promocao.DataInicio >= promocao.DataFim || promocao.DataInicio <= DateTime.Now)
                 return BadRequest("Só é permitido datas atuais e futuras e a data de inicio não pode ser maior ou igual que a data de finalização");
 
-            if (promocao.Porcentagem < 0 || promocao.Porcentagem >= 100) return BadRequest("A porcentagem deve ser um valor entre 0 e 99.");
+            if (promocao.Porcentagem <= 0 || promocao.Porcentagem >= 100) return BadRequest("A porcentagem deve ser um valor entre 1 e 99.");
 
             PromocaoDTOSaida promocaoCriada = await _promocaoService.AddPromocao(promocao);
 
@@ -84,6 +84,9 @@ namespace SwiftBuy.Controllers
 
             if (promocao.DataInicio >= promocao.DataFim || promocao.DataInicio <= DateTime.Now)
                 return BadRequest("Só é permitido datas atuais e futuras e a data de inicio não pode ser maior ou igual que a data de finalização");
+
+            if (promocaoDTO.Porcentagem <= 0 || promocaoDTO.Porcentagem >= 100)
+                return BadRequest("A porcentagem deve ser um valor entre 1 e 99.");
 
             promocaoDTO.SetId(id);
 
