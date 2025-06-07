@@ -6,7 +6,7 @@ using SwiftBuy.Services;
 using SwiftBuy.Services.Interfaces;
 using System.Text.Json.Serialization;
 
-namespace SwiftBuy
+namespace SwiftBuyclear
 {
     public class Program
     {
@@ -39,6 +39,18 @@ namespace SwiftBuy
             //    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             //});
 
+            //Mexemos aqui
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:3000") // frontend
+                               .AllowAnyHeader()
+                               .AllowAnyMethod();
+                    });
+            });
+
             //Não mexer
             builder.Services.AddHttpClient();
 
@@ -58,6 +70,8 @@ namespace SwiftBuy
 
             app.UseHttpsRedirection();
 
+            //Mexemos aqui
+            app.UseCors("AllowSpecificOrigin");
             app.UseAuthorization();
 
 
