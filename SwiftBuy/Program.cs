@@ -45,7 +45,8 @@ namespace SwiftBuyclear
                 options.AddPolicy("AllowSpecificOrigin",
                     builder =>
                     {
-                        builder.WithOrigins("http://localhost:3000") // frontend
+                        builder
+                               .AllowAnyOrigin() // frontend
                                .AllowAnyHeader()
                                .AllowAnyMethod();
                     });
