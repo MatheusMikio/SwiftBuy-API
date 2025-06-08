@@ -39,7 +39,7 @@ namespace SwiftBuyclear
             //    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             //});
 
-            //Mexemos aqui
+            //Forma dos meninos
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowSpecificOrigin",
@@ -71,7 +71,7 @@ namespace SwiftBuyclear
 
             app.UseHttpsRedirection();
 
-            //Mexemos aqui
+
             app.UseCors("AllowSpecificOrigin");
             app.UseAuthorization();
 
